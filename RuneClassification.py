@@ -57,11 +57,11 @@ class CNN_run:
     gen = ImageDataGenerator(rescale= 1./255,shear_range=0.2,zoom_range=0.2,horizontal_flip = True)
     #gen=ImageDataGenerator()
 
-    train_batches = gen.flow_from_directory("/Users/dwp167/PycharmProjects/CNN_cs445/input/chest_xray/chest_xray/train",model.input_shape[1:3],color_mode="grayscale",shuffle=True,seed=1,
+    train_batches = gen.flow_from_directory("Training_data",model.input_shape[1:3],color_mode="grayscale",shuffle=True,seed=1,
                                             batch_size=16)
-    valid_batches = gen.flow_from_directory("/Users/dwp167/PycharmProjects/CNN_cs445/input/chest_xray/chest_xray/val", model.input_shape[1:3],color_mode="grayscale", shuffle=True,seed=1,
+    valid_batches = gen.flow_from_directory("Validation_data", model.input_shape[1:3],color_mode="grayscale", shuffle=True,seed=1,
                                             batch_size=16)
-    test_batches = gen.flow_from_directory("/Users/dwp167/PycharmProjects/CNN_cs445/input/chest_xray/chest_xray/test", model.input_shape[1:3], shuffle=False,
+    test_batches = gen.flow_from_directory("Test_data", model.input_shape[1:3], shuffle=False,
                                            color_mode="grayscale", batch_size=8)
 
 
@@ -77,7 +77,7 @@ class CNN_run:
 
     pre = DataFrame(p)
     pre["filename"] = test_batches.filenames
-    pre["label"] = (pre["filename"].str.contains("PNEUMONIA")).apply(int)
+    pre["label"] = (pre["filename"].str.contains("RuneClassification")).apply(int)
     pre['pre'] = (pre[1]>0.5).apply(int)
 
 
