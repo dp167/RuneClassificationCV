@@ -50,12 +50,12 @@ def alignImages(im1, im2):
 
 if __name__ == '__main__':
     # Read reference image
-    refFilename = "form1.png"
+    refFilename = "rune-template.png"
     print("Reading reference image : ", refFilename)
     imReference = cv2.imread(refFilename, cv2.IMREAD_COLOR)
 
     # Read image to be aligned
-    imFilename = "scanned-form.png"
+    imFilename = "rune-image.png"
     print("Reading image to align : ", imFilename);
     im = cv2.imread(imFilename, cv2.IMREAD_COLOR)
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     imReg, h = alignImages(im, imReference)
 
     # Write aligned image to disk.
-    outFilename = "aligned.jpg"
+    outFilename = "aligned-rune.jpg"
     print("Saving aligned image : ", outFilename);
     cv2.imwrite(outFilename, imReg)
 
