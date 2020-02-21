@@ -30,4 +30,12 @@ MILESTONES AND DELIVERABLES :
       03/10- Presentation of Deliverables due
       03/15 Final Submission due
 
-        
+MILESTONE UPDATE 02/20/2020
+  ----see full details at https://github.com/dp167/RuneClassificationCV/blob/master/milestoneupdate_codereview02_20.pdf
+
+Short term goals before next milestone (02/27) to stay on track:
+      
+      - Perfect autocroping program
+      - Have working image processing program and generated minimum 50 images per Ruin for a testing data set
+      - Test CNN program on the testing data
+              -Revise our approach to data augmentation based on the results here
