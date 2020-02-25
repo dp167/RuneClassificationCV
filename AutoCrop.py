@@ -1,73 +1,69 @@
 import cv2
-import numpy as np
+from os.path import basename
+import glob
 
-MAX_FEATURES = 500
-GOOD_MATCH_PERCENT = 0.15
+def get_contours(img):
+    # First make the image 1-bit and get contours
+    imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+    ret, thresh = cv2.threshold(imgray, 150, 255, 0)
 
-def alignImages(im1, im2):
-    # Convert images to grayscale
-    im1Gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
-    im2Gray = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite('thresh.jpg', thresh)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
-    # Detect ORB features and compute descriptors.
-    orb = cv2.ORB_create(MAX_FEATURES)
-    keypoints1, descriptors1 = orb.detectAndCompute(im1Gray, None)
-    keypoints2, descriptors2 = orb.detectAndCompute(im2Gray, None)
+    # filter contours that are too large or small
+    size = get_size(img)
+    contours = [cc for cc in contours if contourOK(cc, size)]
+    return contours
 
-    # Match features.
-    matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
-    matches = matcher.match(descriptors1, descriptors2, None)
+def get_size(img):
+    ih, iw = img.shape[:2]
+    return iw * ih
 
-    # Sort matches by score
-    matches.sort(key=lambda x: x.distance, reverse=False)
+def contourOK(cc, size=1000000):
+    x, y, w, h = cv2.boundingRect(cc)
+    if w < 50 or h < 50: return False # too narrow or wide is bad
+    area = cv2.contourArea(cc)
+    return area < (size * 0.5) and area > 200
 
-    # Remove not so good matches
-    numGoodMatches = int(len(matches) * GOOD_MATCH_PERCENT)
-    matches = matches[:numGoodMatches]
+def find_boundaries(img, contours):
+    # margin is the minimum distance from the edges of the image, as a fraction
+    ih, iw = img.shape[:2]
+    minx = iw
+    miny = ih
+    maxx = 0
+    maxy = 0
 
-    # Draw top matches
-    imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
-    cv2.imwrite("matches.jpg", imMatches)
+    for cc in contours:
+        x, y, w, h = cv2.boundingRect(cc)
+        if x < minx: minx = x
+        if y < miny: miny = y
+        if x + w > maxx: maxx = x + w
+        if y + h > maxy: maxy = y + h
 
-    # Extract location of good matches
-    points1 = np.zeros((len(matches), 2), dtype=np.float32)
-    points2 = np.zeros((len(matches), 2), dtype=np.float32)
+    return (minx, miny, maxx, maxy)
 
-    for i, match in enumerate(matches):
-        points1[i, :] = keypoints1[match.queryIdx].pt
-        points2[i, :] = keypoints2[match.trainIdx].pt
+def crop(img, boundaries):
+    minx, miny, maxx, maxy = boundaries
+    return img[miny:maxy, minx:maxx]
 
-    # Find homography
-    h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
+def process_image(fname):
+    img = cv2.imread(fname)
+    contours = get_contours(img)
+    cv2.drawContours(img, contours, -1, (0,255,0)) # draws contours, good for debugging
+    bounds = find_boundaries(img, contours)
+    cropped = crop(img, bounds)
+    if get_size(cropped) < 400: return # too small
+    print("ended")
+    cv2.imwrite('croppedimage1.png', cropped)
 
-    # Use homography
-    height, width, channels = im2.shape
-    im1Reg = cv2.warpPerspective(im1, h, (width, height))
+#process_image('runetest1.png')
 
-    return im1Reg, h
-
-
-if __name__ == '__main__':
-    # Read reference image
-    refFilename = "rune-template.png"
-    print("Reading reference image : ", refFilename)
-    imReference = cv2.imread(refFilename, cv2.IMREAD_COLOR)
-
-    # Read image to be aligned
-    imFilename = "rune-image.png"
-    print("Reading image to align : ", imFilename);
-    im = cv2.imread(imFilename, cv2.IMREAD_COLOR)
-
-    print("Aligning images ...")
-    # Registered image will be resotred in imReg.
-    # The estimated homography will be stored in h.
-    imReg, h = alignImages(im, imReference)
-
-    # Write aligned image to disk.
-    outFilename = "aligned-rune.jpg"
-    print("Saving aligned image : ", outFilename);
-    cv2.imwrite(outFilename, imReg)
-
-    # Print estimated homography
-    print("Estimated homography : \n", h)
+testing_dir= '/testing/Ansuz/'# do somthing with this need to traverse training file
+files = []
+types = ('*.bmp', '*.BMP', '*.tiff', '*.TIFF', '*.tif', '*.TIF', '*.jpg', '*.JPG', '*.JPEG', '*.jpeg')  # all should work but only .jpg was tested
+for t in types:
+    if glob.glob(t) != []:
+        files.append(glob.glob(t))
+for f in files[0]:
+    process_image(f)# need to edit this glob functionality to traverse training data file
