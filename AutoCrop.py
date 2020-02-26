@@ -1,6 +1,7 @@
 import cv2
-from os.path import basename
+import os, os.path
 import glob
+
 
 def get_contours(img):
     # First make the image 1-bit and get contours
@@ -8,7 +9,7 @@ def get_contours(img):
 
     ret, thresh = cv2.threshold(imgray, 150, 255, 0)
 
-    cv2.imwrite('thresh.jpg', thresh)
+    #cv2.imwrite('thresh.jpg', thresh)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     # filter contours that are too large or small
@@ -55,15 +56,25 @@ def process_image(fname):
     cropped = crop(img, bounds)
     if get_size(cropped) < 400: return # too small
     print("ended")
-    cv2.imwrite('croppedimage1.png', cropped)
+    cv2.imwrite('runes/testing/Ansuz/croppedimage1.png', cropped)
 
-#process_image('runetest1.png')
+#process_image('runes/testing/Ansuz/IMG_20200220_211502.jpg')
 
-testing_dir= '/testing/Ansuz/'# do somthing with this need to traverse training file
+testing_dir= 'runes/testing/'# do somthing with this need to traverse training file
 files = []
+images = []
+j = 0
 types = ('*.bmp', '*.BMP', '*.tiff', '*.TIFF', '*.tif', '*.TIF', '*.jpg', '*.JPG', '*.JPEG', '*.jpeg')  # all should work but only .jpg was tested
-for t in types:
-    if glob.glob(t) != []:
-        files.append(glob.glob(t))
-for f in files[0]:
-    process_image(f)# need to edit this glob functionality to traverse training data file
+for t in os.listdir(testing_dir):
+    #if glob.glob(t) != []:
+    testing_dir = 'runes/testing/'
+    testing_dir+=t
+    files.append(testing_dir)
+for i in range (0,len(files)):
+ for t in os.listdir(files[i]):
+    j+=1
+    testing_dir = files[i]
+    testing_dir+='/'
+    testing_dir+=t
+    images.append(testing_dir)
+    print(images[j-1])
