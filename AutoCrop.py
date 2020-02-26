@@ -50,6 +50,13 @@ def crop(img, boundaries):
 
 def process_image(fimage, fpath, t):
     img = cv2.imread(fimage)
+    scale_percent = 60 # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    
     contours = get_contours(img)
     cv2.drawContours(img, contours, -1, (0,255,0)) # draws contours, good for debugging
     bounds = find_boundaries(img, contours)
