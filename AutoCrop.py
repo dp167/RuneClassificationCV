@@ -48,15 +48,19 @@ def crop(img, boundaries):
     minx, miny, maxx, maxy = boundaries
     return img[miny:maxy, minx:maxx]
 
-def process_image(fname):
-    img = cv2.imread(fname)
+def process_image(fimage, fpath, t):
+    img = cv2.imread(fimage)
     contours = get_contours(img)
     cv2.drawContours(img, contours, -1, (0,255,0)) # draws contours, good for debugging
     bounds = find_boundaries(img, contours)
     cropped = crop(img, bounds)
     if get_size(cropped) < 400: return # too small
+    fpath+=('/')
+    fpath+=(str(t))
+    fpath+=('.jpg')
     print("ended")
-    cv2.imwrite('runes/testing/Ansuz/croppedimage1.png', cropped)
+    #print(fpath)
+    cv2.imwrite(fpath, cropped)
 
 #process_image('runes/testing/Ansuz/IMG_20200220_211502.jpg')
 
@@ -77,4 +81,4 @@ for i in range (0,len(files)):
     testing_dir+='/'
     testing_dir+=t
     images.append(testing_dir)
-    print(images[j-1])
+    process_image(images[j-1], files[i], j)
