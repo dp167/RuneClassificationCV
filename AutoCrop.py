@@ -42,7 +42,7 @@ def find_boundaries(img, contours):
         if x + w > maxx: maxx = x + w
         if y + h > maxy: maxy = y + h
 
-    return (minx, miny, maxx, maxy)
+    return (minx+20, miny+20, maxx-20, maxy-20)
 
 def crop(img, boundaries):
     minx, miny, maxx, maxy = boundaries
