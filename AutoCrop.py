@@ -50,12 +50,12 @@ def crop(img, boundaries):
 
 def process_image(fimage, fpath, t):
     img = cv2.imread(fimage)
-    scale_percent = 60 # percent of original size
+    scale_percent = 1 # percent of original size
     width = int(img.shape[1] * scale_percent / 100)
     height = int(img.shape[0] * scale_percent / 100)
     dim = (width, height)
     # resize image
-    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     
     contours = get_contours(img)
     cv2.drawContours(img, contours, -1, (0,255,0)) # draws contours, good for debugging
@@ -72,15 +72,20 @@ def process_image(fimage, fpath, t):
 #process_image('runes/testing/Ansuz/IMG_20200220_211502.jpg')
 
 testing_dir= 'runes/testing/'# do somthing with this need to traverse training file
+saving_dir= 'runes/saving/'
 files = []
+save = []
 images = []
 j = 0
 types = ('*.bmp', '*.BMP', '*.tiff', '*.TIFF', '*.tif', '*.TIF', '*.jpg', '*.JPG', '*.JPEG', '*.jpeg')  # all should work but only .jpg was tested
 for t in os.listdir(testing_dir):
     #if glob.glob(t) != []:
     testing_dir = 'runes/testing/'
+    saving_dir = 'runes/saving/'
     testing_dir+=t
+    saving_dir+=t
     files.append(testing_dir)
+    save.append(saving_dir)
 for i in range (0,len(files)):
  for t in os.listdir(files[i]):
     j+=1
@@ -88,4 +93,4 @@ for i in range (0,len(files)):
     testing_dir+='/'
     testing_dir+=t
     images.append(testing_dir)
-    process_image(images[j-1], files[i], j)
+    process_image(images[j-1], save[i], j)
