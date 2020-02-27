@@ -7,7 +7,7 @@ def get_contours(img):
     # First make the image 1-bit and get contours
     imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    ret, thresh = cv2.threshold(imgray, 150, 255, 0)
+    ret, thresh = cv2.threshold(imgray, 90, 255, 0)
 
     #cv2.imwrite('thresh.jpg', thresh)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -50,9 +50,9 @@ def crop(img, boundaries):
 
 def process_image(fimage, fpath, t):
     img = cv2.imread(fimage)
-    scale_percent = 1 # percent of original size
-    width = int(img.shape[1] * scale_percent / 100)
-    height = int(img.shape[0] * scale_percent / 100)
+    
+    width = int(img.shape[1] * 0.1)
+    height = int(img.shape[0] * 0.1)
     dim = (width, height)
     # resize image
     img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
