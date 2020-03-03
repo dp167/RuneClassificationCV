@@ -39,3 +39,12 @@ Short term goals before next milestone (02/27) to stay on track:
       - Have working image processing program and generated minimum 50 images per Ruin for a testing data set
       - Test CNN program on the testing data
               -Revise our approach to data augmentation based on the results here
+
+MILESTONE UPDATE 02/27/2020
+------- see full details at:
+https://github.com/dp167/RuneClassificationCV/blob/master/milestoneupdate_codereview02_27.pdf
+
+Short term goals before next milestone (03/04) to stay on track:
+      
+        - Deploy neural network to classify images in an android application. 
+        - Finalized image preprocessing program.
