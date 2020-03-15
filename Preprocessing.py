@@ -16,7 +16,7 @@ def augment_brightness_camera_images(image):
 
 
 def randMute(img, t, fpath):
-    #randomly choose amout to rotate, dither
+
     image = cv2.imread(img)
 
 
@@ -42,7 +42,7 @@ def randMute(img, t, fpath):
     fpath+="/mut"
     fpath+=str(t)
     fpath+=".jpg"
-    print(fpath)
+    #print(fpath)
     cv2.imwrite(fpath, image)
 
     return image
@@ -55,14 +55,15 @@ images = []
 j, k = 0,0
 types = ('*.bmp', '*.BMP', '*.tiff', '*.TIFF', '*.tif', '*.TIF', '*.jpg', '*.JPG', '*.JPEG', '*.jpeg')  # all should work but only .jpg was tested
 for t in os.listdir(saving_dir):
-    saving_dir = 'runes/saving/'
-    saving_dir+=t
-    save.append(saving_dir)
+    print(os.listdir(saving_dir))
+    sav_dir = 'runes/saving/'
+    sav_dir+=t
     mut_dir = 'runes/mutated/'
     mut_dir+=t
-    save.append(saving_dir)
+    save.append(sav_dir)
     mut.append(mut_dir)
-#print(mut)
+
+print(save)
 for i in range (0,len(mut)):
  for t in os.listdir(save[i]):
     j += 1
@@ -73,6 +74,4 @@ for i in range (0,len(mut)):
 
     for m in range(0,7):
         k += 1
-        #print(images[j-1])
-        #print(mut[i])
         randMute(images[j-1], k, mut[i])
