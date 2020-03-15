@@ -3,7 +3,7 @@ Using Computer Vision to build a image classifier that can classify Rune tiles, 
 
 MVP:
 
-for this project includes the ability to generate a data set from smartphone photos taken of runes and be able to classify 12 specific runes via a file of testing images with an accuracy of at least 70%.
+for this project includes the ability to generate a data set from smartphone photos taken of runes and be able to classify 6 specific runes via a file of testing images with an accuracy of at least 70%.
 
 Reach goals:
   1. produce bounding boxes around particular runes in an image of multiple runes with each rune labled correctly
