@@ -72,6 +72,6 @@ for i in range (0,len(mut)):
     saving_dir+=t
     images.append(saving_dir)
 
-    for m in range(0,7):
+    for m in range(0,14):
         k += 1
         randMute(images[j-1], k, mut[i])
